@@ -83,10 +83,10 @@ def main():
                     "VALUES (:1, :2, :3, :4, :5)", orders)
                 connection.commit()
                 cur.execute(stripped_sql("sql/oracle/02_monthly_revenue.sql").rstrip(";"))
-                monthly = [(int(i), str(amount)) for i, amount in cur.fetchall()]
-                assert monthly == [(1, "25"), (2, "12.4"), (3, "2")], monthly
+                monthly = [(int(i), Decimal(str(amount))) for i, amount in cur.fetchall()]
+                assert monthly == [(1, Decimal("25.00")), (2, Decimal("12.40")), (3, Decimal("2.00"))], monthly
                 cur.execute(stripped_sql("sql/oracle/03_top_customers.sql").rstrip(";"))
-                top = [(int(i), str(amount)) for i, amount in cur.fetchall()]
+                top = [(int(i), Decimal(str(amount))) for i, amount in cur.fetchall()]
                 assert [customer_id for customer_id, _ in top] == [2, 1, 3], top
 
                 cur.execute("SELECT COUNT(*) FROM demo_customers")
@@ -106,8 +106,8 @@ def main():
             ],
             "synthetic_customers": 3,
             "synthetic_orders": 6,
-            "monthly_revenue": monthly,
-            "top_customers": top,
+            "monthly_revenue": [(i, format(v, ".2f")) for i, v in monthly],
+            "top_customers": [(i, format(v, ".2f")) for i, v in top],
             "returning_id_rollback": True,
             "scope": "Oracle Free target-engine syntax and illustrative outputs only",
             "not_verified": [
