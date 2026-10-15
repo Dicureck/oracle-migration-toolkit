@@ -53,7 +53,7 @@ def main():
             version = str(cur.fetchone()[0])
             ephemeral_password = "Smoke" + secrets.token_hex(14)
             cur.execute(f'CREATE USER SYNTHSMOKE IDENTIFIED BY "{ephemeral_password}"')
-            cur.execute("GRANT CREATE SESSION, CREATE TABLE TO SYNTHSMOKE")
+            cur.execute("GRANT CREATE SESSION, CREATE TABLE, CREATE SEQUENCE TO SYNTHSMOKE")
             cur.execute("ALTER USER SYNTHSMOKE QUOTA UNLIMITED ON USERS")
         admin.commit()
         with oracledb.connect(user="SYNTHSMOKE",
