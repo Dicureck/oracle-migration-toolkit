@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oracle-migration-toolkit-lab"
+version = "0.1.0"
+description = "Offline SQL Server to Oracle migration assessment, dependency planning, and synthetic contract testing"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{name = "Melissa Castro"}]
+license = {file = "LICENSE"}
+keywords = ["sql-server", "oracle", "plsql", "migration", "static-analysis", "data-engineering"]
+classifiers = ["Programming Language :: Python :: 3", "Programming Language :: Python :: 3.11", "Topic :: Database"]
+
+[project.scripts]
+oracle-migration-lab = "migration_lab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

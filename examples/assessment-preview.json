@@ -1,0 +1,57 @@
+{
+  "assessment_type": "static_heuristic_not_compilation",
+  "files_scanned": 4,
+  "finding_count": 5,
+  "severity_counts": {
+    "high": 3,
+    "medium": 2,
+    "low": 0
+  },
+  "findings": [
+    {
+      "file": "01_schema.sql",
+      "line": 4,
+      "column": 21,
+      "rule": "IDENTITY",
+      "severity": "high",
+      "description": "SQL Server identity column",
+      "guidance": "Choose Oracle identity or sequence + trigger; review existing key data and insert behavior."
+    },
+    {
+      "file": "01_schema.sql",
+      "line": 10,
+      "column": 18,
+      "rule": "IDENTITY",
+      "severity": "high",
+      "description": "SQL Server identity column",
+      "guidance": "Choose Oracle identity or sequence + trigger; review existing key data and insert behavior."
+    },
+    {
+      "file": "02_monthly_revenue.sql",
+      "line": 10,
+      "column": 22,
+      "rule": "DATEADD",
+      "severity": "medium",
+      "description": "SQL Server date arithmetic",
+      "guidance": "Map each date part individually (e.g. ADD_MONTHS); check month-end behavior."
+    },
+    {
+      "file": "03_top_customers.sql",
+      "line": 3,
+      "column": 8,
+      "rule": "TOP",
+      "severity": "medium",
+      "description": "T-SQL TOP row limiter",
+      "guidance": "Use FETCH FIRST / OFFSET FETCH with deterministic ORDER BY; review WITH TIES and variables."
+    },
+    {
+      "file": "04_returning_id.sql",
+      "line": 5,
+      "column": 1,
+      "rule": "OUTPUT_INSERTED",
+      "severity": "high",
+      "description": "DML OUTPUT clause",
+      "guidance": "Evaluate Oracle RETURNING INTO or bulk DML patterns."
+    }
+  ]
+}

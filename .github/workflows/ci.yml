@@ -1,0 +1,45 @@
+name: Migration Lab CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline-validation:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install lab
+        run: python -m pip install -e .
+      - name: Unit tests (no databases required)
+        run: python -m unittest discover -s tests -v
+      - name: Scan sample T-SQL
+        run: python -m migration_lab assess sql/sqlserver --output build/assessment.json
+      - name: Produce ordered migration plan
+        run: python -m migration_lab plan examples/inventory.json --format markdown --output build/migration-plan.md
+      - name: Verify synthetic reference contracts
+        run: python -m migration_lab verify examples/contracts.json --output build/contract-results.json
+      - name: Reconcile synthetic CSV exports including duplicates
+        run: python -m migration_lab reconcile examples/exports/sqlserver_monthly_revenue.csv examples/exports/oracle_monthly_revenue.csv --output build/reconciliation.json
+      - name: Generate deterministic sample data
+        run: python -m migration_lab generate --out build/generated --customers 200 --orders 3000 --seed 42
+      - name: Upload reproducible review outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-reports-py${{ matrix.python-version }}
+          path: build/
+          if-no-files-found: ignore

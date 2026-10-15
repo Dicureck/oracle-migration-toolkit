@@ -1,0 +1,32 @@
+{
+  "description": "Offline Python reference contracts. They DO NOT execute queries in SQL Server or Oracle.",
+  "contracts": [
+    {
+      "name": "February 2024 leap-day, end-exclusive boundary, cancelled exclusion",
+      "kind": "monthly_revenue",
+      "start_inclusive": "2024-02-01T00:00:00",
+      "end_exclusive": "2024-03-01T00:00:00",
+      "records": [
+        {"customer_id": 10, "created_at": "2024-01-31T23:59:59", "status": "COMPLETED", "amount": "999.99"},
+        {"customer_id": 10, "created_at": "2024-02-01T00:00:00", "status": "COMPLETED", "amount": "10.25"},
+        {"customer_id": 10, "created_at": "2024-02-29T23:59:59", "status": "COMPLETED", "amount": "6.75"},
+        {"customer_id": 10, "created_at": "2024-02-15T12:00:00", "status": "VOID", "amount": "100.00"},
+        {"customer_id": 20, "created_at": "2024-02-25T08:30:00", "status": "COMPLETED", "amount": "4.90"},
+        {"customer_id": 10, "created_at": "2024-03-01T00:00:00", "status": "COMPLETED", "amount": "200.00"}
+      ],
+      "expected": [{"customer_id": 10, "revenue": "17.00"}, {"customer_id": 20, "revenue": "4.90"}]
+    },
+    {
+      "name": "Deterministic top-N ordering with tie-breaker",
+      "kind": "top_customers",
+      "limit": 3,
+      "records": [
+        {"customer_id": 30, "revenue": "900.00"},
+        {"customer_id": 10, "revenue": "1000.00"},
+        {"customer_id": 20, "revenue": "900.00"},
+        {"customer_id": 40, "revenue": "100.00"}
+      ],
+      "expected": [10, 20, 30]
+    }
+  ]
+}

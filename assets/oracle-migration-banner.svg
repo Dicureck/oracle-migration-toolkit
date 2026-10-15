@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="480" viewBox="0 0 1600 480" role="img" aria-labelledby="title desc">
+  <title id="title">Oracle Migration Toolkit — Melissa Castro</title>
+  <desc id="desc">Professional cyber-noir banner with electric cyan, violet and a visual graph of database migration dependencies.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#070D1A"/><stop offset="57%" stop-color="#101A34"/><stop offset="100%" stop-color="#17132C"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#4ADFFF"/><stop offset=".55" stop-color="#70A5FF"/><stop offset="1" stop-color="#B18CFF"/></linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="#7157DB" stop-opacity=".32"/><stop offset="1" stop-color="#7157DB" stop-opacity="0"/></radialGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#7A9FD7" stroke-opacity=".085" stroke-width="1"/></pattern>
+    <filter id="soft"><feGaussianBlur stdDeviation="12"/></filter>
+    <filter id="edge"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="c"><rect width="1600" height="480" rx="18"/></clipPath>
+  </defs>
+  <g clip-path="url(#c)">
+    <rect width="1600" height="480" fill="url(#bg)"/>
+    <rect width="1600" height="480" fill="url(#grid)"/>
+    <ellipse cx="1280" cy="200" rx="400" ry="330" fill="url(#glow)"/>
+    <path d="M0 100H1600M0 389H1600" stroke="#67C7FF" stroke-opacity=".15"/>
+    <g fill="none" stroke="#6FC9FF" stroke-width="2" stroke-opacity=".52">
+      <path d="M1000 126H1167L1229 185H1386"/>
+      <path d="M1000 340H1167L1229 283H1386"/>
+      <path d="M1090 233H1386"/>
+      <path d="M1191 126V185M1191 283V340" stroke-dasharray="6 9"/>
+    </g>
+    <g fill="none" stroke="#AE97FF" stroke-width="3" stroke-opacity=".65">
+      <path d="M1043 186H1160V230H1265"/>
+      <path d="M1043 290H1160V248H1265"/>
+    </g>
+    <g fill="#0F203C" stroke="#7FD7FF" stroke-width="2">
+      <rect x="957" y="107" rx="14" width="160" height="78"/>
+      <rect x="957" y="277" rx="14" width="160" height="78"/>
+    </g>
+    <g fill="#172042" stroke="#B69AFF" stroke-width="2">
+      <rect x="1262" y="184" rx="15" width="238" height="99"/>
+    </g>
+    <g font-family="DejaVu Sans, Arial, sans-serif">
+      <text x="988" y="141" font-size="17" font-weight="700" fill="#97E3FF">SQL SERVER</text>
+      <text x="987" y="166" font-size="13" fill="#7EABC9" letter-spacing="2">T-SQL INPUT</text>
+      <text x="995" y="311" font-size="16" font-weight="700" fill="#97E3FF">METADATA</text>
+      <text x="992" y="334" font-size="13" fill="#7EABC9" letter-spacing="1.7">DEPENDENCIES</text>
+      <text x="1291" y="225" font-size="22" font-weight="700" fill="#D6C6FF">ORACLE</text>
+      <text x="1291" y="253" font-size="14" fill="#B9A7EF" letter-spacing="2">PL/SQL · 12c+</text>
+      <text x="69" y="61" font-size="15" letter-spacing="4" fill="#85A7C8">DATABASE ENGINEERING  /  02</text>
+      <rect x="69" y="111" width="7" height="210" rx="3" fill="url(#accent)"/>
+      <text x="103" y="189" font-size="76" font-weight="700" fill="#FFFFFF" letter-spacing="1">ORACLE</text>
+      <text x="103" y="275" font-size="68" font-weight="700" fill="url(#accent)" letter-spacing="1">MIGRATION</text>
+      <text x="106" y="321" font-size="25" letter-spacing="4.4" fill="#D6E7FA">TOOLKIT</text>
+      <text x="106" y="374" font-size="20" letter-spacing="1.3" fill="#A9B9D7">ASSESS  ·  PLAN  ·  RECONCILE  ·  VALIDATE</text>
+      <text x="70" y="440" font-size="15" letter-spacing="2.3" fill="#8BA8CB">MELISSA CASTRO  /  DATA &amp; SQL ENGINEERING LAB</text>
+      <text x="1331" y="438" font-size="14" letter-spacing="3" fill="#8BA1C5">MC // 02</text>
+    </g>
+    <path d="M70 401H938" stroke="url(#accent)" stroke-width="2" stroke-opacity=".55"/>
+    <g fill="#72E1FF" filter="url(#edge)">
+      <circle cx="1161" cy="230" r="5"/><circle cx="1161" cy="248" r="5"/><circle cx="1229" cy="185" r="5"/><circle cx="1229" cy="283" r="5"/>
+    </g>
+    <g opacity=".72" stroke="#85C4FF" stroke-width="1" fill="none"><circle cx="1394" cy="234" r="115"/><circle cx="1394" cy="234" r="143" stroke-dasharray="6 12"/></g>
+  </g>
+</svg>

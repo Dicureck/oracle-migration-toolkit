@@ -1,0 +1,47 @@
+{
+  "method": "offline_reference_contracts_not_cross_database_execution",
+  "passed": 2,
+  "failed": 0,
+  "results": [
+    {
+      "name": "February 2024 leap-day, end-exclusive boundary, cancelled exclusion",
+      "kind": "monthly_revenue",
+      "passed": true,
+      "expected": [
+        {
+          "customer_id": 10,
+          "revenue": "17.00"
+        },
+        {
+          "customer_id": 20,
+          "revenue": "4.90"
+        }
+      ],
+      "actual": [
+        {
+          "customer_id": 10,
+          "revenue": "17.00"
+        },
+        {
+          "customer_id": 20,
+          "revenue": "4.90"
+        }
+      ]
+    },
+    {
+      "name": "Deterministic top-N ordering with tie-breaker",
+      "kind": "top_customers",
+      "passed": true,
+      "expected": [
+        10,
+        20,
+        30
+      ],
+      "actual": [
+        10,
+        20,
+        30
+      ]
+    }
+  ]
+}

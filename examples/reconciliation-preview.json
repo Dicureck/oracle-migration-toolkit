@@ -1,0 +1,16 @@
+{
+  "method": "byte_exact_csv_multiset_comparison_not_sql_execution",
+  "matching": true,
+  "columns": [
+    "customer_id",
+    "revenue"
+  ],
+  "left_rows": 3,
+  "right_rows": 3,
+  "missing_rows_total": 0,
+  "extra_rows_total": 0,
+  "missing_in_right": [],
+  "extra_in_right": [],
+  "diff_preview_truncated": false,
+  "note": "Export timestamps, decimals and NULLs in identical canonical forms before comparing."
+}

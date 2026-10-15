@@ -1,0 +1,13 @@
+{
+  "scenario": "Fully fictional sales analytics database",
+  "objects": [
+    {"name": "DEMO_CUSTOMERS", "type": "table", "depends_on": []},
+    {"name": "DEMO_ORDERS", "type": "table", "depends_on": ["DEMO_CUSTOMERS"]},
+    {"name": "DEMO_AUDIT_SEQ", "type": "sequence", "depends_on": []},
+    {"name": "DEMO_ORDER_TOTAL", "type": "function", "depends_on": ["DEMO_ORDERS"], "review_required": true, "note": "Check NULL and decimal semantics"},
+    {"name": "DEMO_MONTHLY_REVENUE_V", "type": "view", "depends_on": ["DEMO_ORDERS", "DEMO_CUSTOMERS"]},
+    {"name": "DEMO_REPORTING_PKG", "type": "package", "depends_on": ["DEMO_ORDER_TOTAL", "DEMO_MONTHLY_REVENUE_V"], "review_required": true, "note": "Check parameter types and privilege grants"},
+    {"name": "DEMO_SAMPLE_DATA", "type": "data", "depends_on": ["DEMO_ORDERS", "DEMO_CUSTOMERS"], "review_required": true, "note": "Load only into disposable lab schema"},
+    {"name": "DEMO_RECONCILIATION", "type": "procedure", "depends_on": ["DEMO_SAMPLE_DATA", "DEMO_REPORTING_PKG"]}
+  ]
+}
