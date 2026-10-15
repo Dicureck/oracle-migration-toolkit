@@ -1,0 +1,48 @@
+{
+  "status": "verified-synthetic-oracle-free-smoke",
+  "oracle_banner": "Oracle AI Database 26ai Free Release 23.26.3.0.0 - Develop, Learn, and Run for Free",
+  "database": "Disposable Oracle Free PDB",
+  "source_examples": [
+    "01_schema.sql",
+    "02_monthly_revenue.sql",
+    "03_top_customers.sql",
+    "04_returning_id.sql"
+  ],
+  "synthetic_customers": 3,
+  "synthetic_orders": 6,
+  "monthly_revenue": [
+    [
+      1,
+      "25.00"
+    ],
+    [
+      2,
+      "12.40"
+    ],
+    [
+      3,
+      "2.00"
+    ]
+  ],
+  "top_customers": [
+    [
+      2,
+      "45.40"
+    ],
+    [
+      1,
+      "25.00"
+    ],
+    [
+      3,
+      "2.00"
+    ]
+  ],
+  "returning_id_rollback": true,
+  "scope": "Oracle Free target-engine syntax and illustrative outputs only",
+  "not_verified": [
+    "Oracle 12.1 compatibility",
+    "SQL Server cross-engine parity",
+    "production behavior"
+  ]
+}
