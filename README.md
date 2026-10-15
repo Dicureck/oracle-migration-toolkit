@@ -147,7 +147,7 @@ There are intentionally **no** advertised migration throughput gains, no claims 
 <sub>Building reliable data systems through measurable, reviewable engineering.</sub></p>
 
 
-**Release preparation:** [v0.1.0 notes](RELEASE_NOTES_DRAFT.md) · [Changelog](CHANGELOG.md). Native GitHub Release pending.
+**Official GitHub Release:** [v0.1.0](https://github.com/Dicureck/oracle-migration-toolkit/releases/tag/v0.1.0) — CI-gated source snapshot, release notes, and downloadable source archives. [Changelog](CHANGELOG.md).
 
 
 ### Optional real Oracle Free syntax smoke
