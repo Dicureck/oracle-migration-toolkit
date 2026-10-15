@@ -1,0 +1,45 @@
+name: Oracle Free — Synthetic Runtime Smoke
+
+on:
+  push:
+    paths:
+      - "tests/oracle_smoke.py"
+      - "sql/oracle/**"
+      - ".github/workflows/oracle-runtime.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oracle-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 32
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Python Oracle thin driver
+        run: python -m pip install 'oracledb==2.5.1'
+      - name: Generate ephemeral-only lab credential
+        run: echo "ORACLE_PASSWORD=Temp_$(openssl rand -hex 18)!" >> "$GITHUB_ENV"
+      - name: Start disposable Oracle Free service
+        run: |
+          docker run -d --name synthetic-oracle-smoke \
+            -p 127.0.0.1:1521:1521 \
+            -e ORACLE_PASSWORD="$ORACLE_PASSWORD" \
+            gvenzl/oracle-free:23-slim-faststart
+      - name: Verify original Oracle example scripts against a real temporary engine
+        run: python tests/oracle_smoke.py
+      - name: Upload synthetic runtime smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: oracle-free-synthetic-smoke
+          path: build/oracle-runtime-smoke.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Tear down disposable database
+        if: always()
+        run: docker rm -f synthetic-oracle-smoke || true
