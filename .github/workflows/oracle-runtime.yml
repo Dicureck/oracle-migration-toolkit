@@ -23,7 +23,10 @@ jobs:
       - name: Install Python Oracle thin driver
         run: python -m pip install 'oracledb==2.5.1'
       - name: Generate ephemeral-only lab credential
-        run: echo "ORACLE_PASSWORD=Temp_$(openssl rand -hex 18)!" >> "$GITHUB_ENV"
+        run: |
+          TEMP_PASSWORD="Temp_$(openssl rand -hex 18)!"
+          echo "::add-mask::$TEMP_PASSWORD"
+          echo "ORACLE_PASSWORD=$TEMP_PASSWORD" >> "$GITHUB_ENV"
       - name: Start disposable Oracle Free service
         run: |
           docker run -d --name synthetic-oracle-smoke \

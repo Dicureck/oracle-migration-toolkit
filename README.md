@@ -152,4 +152,4 @@ There are intentionally **no** advertised migration throughput gains, no claims 
 
 ### Optional real Oracle Free syntax smoke
 
-An additional [isolated Oracle Free 23 runtime workflow](docs/oracle-runtime-smoke.md) now tests selected **original synthetic Oracle SQL** when triggered. Its result must be checked in [Actions](https://github.com/Dicureck/oracle-migration-toolkit/actions/workflows/oracle-runtime.yml) before claiming it passed. This does not establish Oracle 12.1 or SQL Server cross-engine equivalence.
+An additional [isolated Oracle Free 23 runtime workflow](docs/oracle-runtime-smoke.md) now tests selected **original synthetic Oracle SQL** when triggered. [The 2026-10-15 real-engine CI test passed](https://github.com/Dicureck/oracle-migration-toolkit/actions/runs/38815481933), and its [Oracle Free 26ai results](evidence/oracle-free-runtime-2026-10-15.json) are archived. This is not evidence of Oracle 12.1 compatibility or cross-engine SQL Server parity. This does not establish Oracle 12.1 or SQL Server cross-engine equivalence.

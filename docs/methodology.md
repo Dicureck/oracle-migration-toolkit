@@ -33,7 +33,8 @@ Use fictitious identifiers and deterministic synthetic records. Include edge cas
 ## Phase 6 — Validate at two levels
 
 1. **Offline checks:** inventory correctness, lint-style risk detection, reference contract consistency and CSV bag reconciliation. GitHub Actions covers these.
-2. **Database integration checks:** after provisioning separate authorized test engines, compare actual source and target outputs with same records. Inspect query plans and boundary cases. These checks are *not yet implemented or claimed for this demonstration*.
+2. **Target engine smoke tests:** an [Oracle Free 26ai CI run](oracle-runtime-smoke.md) verified compilation/execution of original synthetic Oracle sample SQL. This is **not** an Oracle 12.1 compatibility test.
+3. **Full cross-engine integration:** comparison of actual SQL Server and Oracle output on matching source fixtures, along with plans and boundary cases, **remains pending**.
 
 ## Phase 7 — Govern release
 
