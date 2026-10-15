@@ -145,3 +145,6 @@ There are intentionally **no** advertised migration throughput gains, no claims 
 
 <p align="center"><strong>Melissa Castro</strong> · Data Analytics & Business Intelligence · SQL Engineering · Automation<br>
 <sub>Building reliable data systems through measurable, reviewable engineering.</sub></p>
+
+
+**Release preparation:** [v0.1.0 notes](RELEASE_NOTES_DRAFT.md) · [Changelog](CHANGELOG.md). Native GitHub Release pending.
