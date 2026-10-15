@@ -6,6 +6,8 @@ on:
       - "tests/oracle_smoke.py"
       - "sql/oracle/**"
       - ".github/workflows/oracle-runtime.yml"
+      - "RELEASE_NOTES.md"
+      - ".github/workflows/publish-v0.1.0.yml"
   workflow_dispatch:
 
 permissions:

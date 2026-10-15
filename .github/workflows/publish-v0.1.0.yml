@@ -1,0 +1,65 @@
+name: Publish Oracle Migration v0.1.0
+on:
+  workflow_run:
+    workflows: ["Oracle Free — Synthetic Runtime Smoke"]
+    types: [completed]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  publish:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - name: Verify offline CI on exactly the same source commit
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          EXPECTED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          test -f LICENSE && test -f RELEASE_NOTES.md
+          passed=0
+          for attempt in $(seq 1 65); do
+            result="$(gh run list --repo "$GH_REPO" --commit "$EXPECTED_SHA" \
+              --json name,conclusion --limit 40 \
+              --jq '[.[] | select(.name == "Migration Lab CI") | .conclusion][0] // ""')"
+            if [ "$result" = "success" ]; then passed=1; break; fi
+            if [ "$result" = "failure" ] || [ "$result" = "cancelled" ]; then
+              echo "Offline Migration Lab CI was not successful: $result"
+              exit 1
+            fi
+            sleep 10
+          done
+          test "$passed" = "1" || { echo "Timed out waiting for offline CI"; exit 1; }
+      - name: Create official source release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          EXPECTED_SHA: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view v0.1.0 --repo "$GH_REPO" >/dev/null 2>&1; then
+            echo "v0.1.0 already exists; no modification."
+            exit 0
+          fi
+          if gh api "repos/$GH_REPO/git/ref/tags/v0.1.0" >/dev/null 2>&1; then
+            echo "Tag already exists without Release; manual review required."
+            exit 1
+          fi
+          gh release create v0.1.0 --repo "$GH_REPO" \
+            --target "$EXPECTED_SHA" --title "Oracle Migration Toolkit · v0.1.0" \
+            --notes-file RELEASE_NOTES.md --latest
+          gh release view v0.1.0 --repo "$GH_REPO" --json tagName,url,targetCommitish
