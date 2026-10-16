@@ -1,0 +1,68 @@
+{
+  "status": "verified-cross-engine-synthetic-parity",
+  "fixture_sha256": "602d3ee334b14561e97bd642293c5b020e17ef25c817c2ba48029d12bf30fbb8",
+  "source": {
+    "customers": 26,
+    "orders": 260,
+    "completed": 232,
+    "completed_amount_su": "568398.83"
+  },
+  "engines": {
+    "sqlserver": {
+      "version_and_settings": {
+        "engine_version": "16.0.4305.5",
+        "edition": "Developer Edition (64-bit)",
+        "collation": "SQL_Latin1_General_CP1_CI_AS",
+        "time_precision": "DATETIME2(0)",
+        "amount_precision": "DECIMAL(18,2)"
+      },
+      "transaction_rollback": true,
+      "source_rows_exact": true,
+      "empty_string_behavior": "EMPTY"
+    },
+    "oracle": {
+      "version_and_settings": {
+        "engine_version": "Oracle AI Database 26ai Free Release 23.26.3.0.0 - Develop, Learn, and Run for Free",
+        "nls_session": {
+          "NLS_NUMERIC_CHARACTERS": ".,",
+          "NLS_DATE_FORMAT": "DD-MON-RR",
+          "NLS_SORT": "BINARY"
+        },
+        "time_precision": "TIMESTAMP(0)",
+        "amount_precision": "NUMBER(18,2)"
+      },
+      "transaction_rollback": true,
+      "source_rows_exact": true,
+      "empty_string_behavior": "NULL"
+    }
+  },
+  "tests": {
+    "original_paired_monthly_revenue": 14,
+    "original_paired_top_ten": 10,
+    "month_by_customer_groups": 160,
+    "date_windows": {
+      "february_leap": 14,
+      "leap_day": 3,
+      "march": 18,
+      "full_2024": 26,
+      "empty": 0
+    },
+    "cross_engine_full_result_equivalence": true,
+    "independent_decimal_reference_equivalence": true,
+    "same_complete_source_rows": true,
+    "transactional_rollback_both": true
+  },
+  "expected_difference": {
+    "feature": "zero-length character literal",
+    "sqlserver": "EMPTY (not NULL)",
+    "oracle": "NULL",
+    "resolution": "Explicit mapping/review required; not all cross-engine semantics are identical."
+  },
+  "excluded": [
+    "Oracle 12.1.0.2 runtime validation",
+    "production system behavior",
+    "cross-database atomic transactions",
+    "SQL Server/Oracle performance parity",
+    "all timezone, NLS and collation configurations"
+  ]
+}
