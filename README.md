@@ -22,7 +22,7 @@ SQL migration is not a search-and-replace operation. It is a **compatibility, de
 
 It combines a **conservative T-SQL feature scanner**, a **dependency-aware migration planner**, **synthetic business-rule contracts**, and **multiset reconciliation of exported query results**. All public code, object names, contracts, and datasets are fictional and created for this portfolio.
 
-> **Scope:** This is a reproducible engineering demonstration—not a complete T-SQL parser, a production migration product, or proof of equivalence on live SQL Server and Oracle instances. The core CLI does **not connect to databases or execute SQL**.
+> **Scope:** This is a reproducible engineering demonstration—not a complete T-SQL parser, a production migration product, or blanket proof of migration equivalence. The core CLI stays **offline and never connects to a database**, while a **separate, opt-in isolated CI harness** now executes selected original paired SQL against both real SQL Server Developer and Oracle Free 26ai ([verified bounded results](docs/verified-cross-engine-parity-2026-10-16.md)).
 
 ## 02 // Architecture
 
@@ -45,10 +45,11 @@ flowchart LR
 |---|---|---|
 | Static compatibility assessment | Flags T-SQL patterns such as `TOP`, `DATEADD`, `DATEDIFF`, `IDENTITY`, temp tables | Heuristic rules; manual code review required |
 | Dependency planner | Detects missing references/cycles and produces a deterministic topological order | Inventory-based; no schema introspection |
-| Curated SQL patterns | Paired SQL Server / Oracle 12c+ demonstrations with semantic notes | Neither dialect is executed by CI |
-| Business-rule contracts | Decimal-safe reference outcomes and deterministic tie-breaking | Python reference behavior, **not database parity** |
+| Curated SQL patterns | Original paired T-SQL and Oracle SQL with explicit migration contracts | **Both engines executed** for monthly revenue, Top 10 and new boundary queries in isolated CI; Oracle 12.1 untested |
+| Business-rule contracts | Decimal-safe reference outcomes, ranked ties, leap-day boundaries and negative cases | Offline reference plus [actual SQL Server ↔ Oracle Free reconciliation](docs/verified-cross-engine-parity-2026-10-16.md) |
 | CSV reconciliation | Detects missing, extra, and duplicate result rows in exported datasets | Exact formatted-string comparisons only |
 | Synthetic generator | Deterministically creates imaginary customer/order CSV data | No real entities or client data |
+| **Cross-engine runtime gate** | Two independent containers execute original paired queries; a third runner reconciles source rows, five windows and rollback | **Verified on SQL Server 2022 and Oracle Free 26ai only; Oracle 12.1 untested** |
 
 ## 03 // Try it in two minutes
 
@@ -126,7 +127,8 @@ oracle-migration-toolkit/
 
 - **31 local Python unit tests passed** in the authoring environment, covering scanner masking, dependency validation, reference contract cases, CSV multiset semantics, CLI output, and deterministic data generation.
 - GitHub Actions runs offline tests on Python 3.11, 3.12 and 3.13, then generates review artifacts.
-- **No SQL Server / Oracle integration tests have been run for this lab.** SQL examples must be reviewed and executed in isolated, authorized test databases before claiming engine-level equivalence.
+- **Real SQL Server ↔ Oracle Free functional parity verified** in a [successful three-job CI execution](https://github.com/Dicureck/oracle-migration-toolkit/actions/runs/38946759282) over 26 fictional customers and 260 fictional orders. Original February revenue, Top 10 ranking, 160 month/customer groups and five half-open date windows matched, as did full stored rows and rollback. [Raw outputs and reference verdict are permanently archived](evidence/cross-engine/ci-38946759282/).
+- SQL Server **16.0.4305.5 Developer** and **Oracle AI Database 26ai Free 23.26.3.0.0** were actually executed. The differing empty-string/NULL semantics were confirmed and explicitly excluded from the parity claim. **Oracle 12.1.0.2, plan parity and production behavior remain untested.**
 - All SQL is provided as **illustrative examples**, not as a production deployment script.
 
 There are intentionally **no** advertised migration throughput gains, no claims of 1:1 production conversions, and no fabricated customer case studies.
@@ -137,6 +139,7 @@ There are intentionally **no** advertised migration throughput gains, no claims 
 - [Migration methodology](docs/methodology.md)
 - [SQL Server → Oracle compatibility matrix](docs/compatibility-matrix.md)
 - [Reconciliation design](docs/reconciliation.md)
+- [Verified real SQL Server ↔ Oracle Free cross-engine migration case study](docs/verified-cross-engine-parity-2026-10-16.md)
 - [Architecture and engineering decisions](docs/architecture.md)
 - [Risk register and limitations](docs/risks.md)
 - [Security and responsible use](SECURITY.md)
@@ -149,6 +152,12 @@ There are intentionally **no** advertised migration throughput gains, no claims 
 
 **Official GitHub Release:** [v0.1.0](https://github.com/Dicureck/oracle-migration-toolkit/releases/tag/v0.1.0) — CI-gated source snapshot, release notes, and downloadable source archives. [Changelog](CHANGELOG.md).
 
+
+### Verified two-engine synthetic migration gate
+
+Unlike the offline CLI, the **[isolated real-engine GitHub Actions workflow](.github/workflows/cross-engine-parity.yml)** executes selected *original paired* SQL on both SQL Server Developer 2022 and Oracle Free 26ai. The [2026-10-16 execution](https://github.com/Dicureck/oracle-migration-toolkit/actions/runs/38946759282) passed all three jobs, including independent Python Decimal reconciliation of **260 fabricated orders**, source-row roundtrips, leap-day/month boundaries, Top 10 ordering and rollback. See [case study](docs/verified-cross-engine-parity-2026-10-16.md) and [permanent evidence](evidence/cross-engine/ci-38946759282/).
+
+**Scope boundary:** the verified target is **Oracle Free 26ai, not Oracle 12.1**. Empty-string/NULL behavior was intentionally found different between the engines, requiring explicit migration policy; the validated reporting outputs still matched.
 
 ### Optional real Oracle Free syntax smoke
 
