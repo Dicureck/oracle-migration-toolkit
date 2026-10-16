@@ -1,0 +1,163 @@
+name: Real SQL Server ↔ Oracle Free · Synthetic Parity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tests/cross_engine/**'
+      - 'sql/oracle/**'
+      - 'sql/sqlserver/**'
+      - 'examples/data/**'
+      - '.github/workflows/cross-engine-parity.yml'
+  pull_request:
+    paths:
+      - 'tests/cross_engine/**'
+      - 'sql/oracle/**'
+      - 'sql/sqlserver/**'
+      - 'examples/data/**'
+      - '.github/workflows/cross-engine-parity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: synthetic-cross-engine-parity-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sqlserver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PARITY_ISOLATED_CI: 'YES'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install isolated Microsoft SQL Server Python client
+        run: python -m pip install 'pymssql>=2.3.2,<3'
+      - name: Verify independent fixture and negative tests before execution
+        run: PYTHONPATH=tests python -m unittest discover -s tests/cross_engine -t tests -v
+      - name: Generate noncommitted ephemeral password
+        shell: bash
+        run: |
+          set -euo pipefail
+          pw="$(python -c 'import secrets; print("Lab_Ci_Only_2026!"+secrets.token_hex(16))')"
+          echo "::add-mask::$pw"
+          printf 'SQLLAB_PASSWORD=%s\n' "$pw" >> "$GITHUB_ENV"
+      - name: Launch isolated SQL Server Developer 2022 on loopback
+        run: |
+          docker run -d --name oracle-parity-sqlserver --restart no \
+            -p 127.0.0.1:14333:1433 -e ACCEPT_EULA=Y -e MSSQL_PID=Developer \
+            -e MSSQL_SA_PASSWORD="$SQLLAB_PASSWORD" mcr.microsoft.com/mssql/server:2022-latest
+      - name: Execute original T-SQL examples with 260 same invented orders
+        run: >-
+          python tests/cross_engine/run_engine.py --engine sqlserver
+          --out build/cross-engine/sqlserver.json
+      - name: Preserve raw SQL Server engine output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-engine-sqlserver-results
+          path: build/cross-engine/sqlserver.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Remove disposable SQL Server instance and database
+        if: always()
+        run: docker rm -f oracle-parity-sqlserver 2>/dev/null || true
+
+  oracle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 37
+    env:
+      PARITY_ISOLATED_CI: 'YES'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Oracle Free thin driver
+        run: python -m pip install 'oracledb==2.5.1'
+      - name: Verify independent fixture and negative tests before execution
+        run: PYTHONPATH=tests python -m unittest discover -s tests/cross_engine -t tests -v
+      - name: Generate noncommitted ephemeral password
+        shell: bash
+        run: |
+          set -euo pipefail
+          pw="$(python -c 'import secrets; print("Temp_Parity!"+secrets.token_hex(16))')"
+          echo "::add-mask::$pw"
+          printf 'ORACLE_PASSWORD=%s\n' "$pw" >> "$GITHUB_ENV"
+      - name: Start isolated Oracle Free PDB on loopback
+        run: |
+          docker run -d --name oracle-parity-oracle --restart no \
+            -p 127.0.0.1:1521:1521 -e ORACLE_PASSWORD="$ORACLE_PASSWORD" \
+            gvenzl/oracle-free:23-slim-faststart
+      - name: Run original Oracle SQL on the same 260 fictional orders
+        run: >-
+          python tests/cross_engine/run_engine.py --engine oracle
+          --out build/cross-engine/oracle.json
+      - name: Preserve raw Oracle Free engine output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-engine-oracle-results
+          path: build/cross-engine/oracle.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Remove disposable Oracle Free instance
+        if: always()
+        run: docker rm -f oracle-parity-oracle 2>/dev/null || true
+
+  reconcile-and-archive:
+    needs: [sqlserver, oracle]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve both real engine run outputs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: cross-engine-*-results
+          path: build/cross-engine/raw
+          merge-multiple: false
+      - name: Compare complete SQL Server and Oracle outputs to independent Decimal reference
+        run: |
+          set -euo pipefail
+          PYTHONPATH=tests python -m unittest discover -s tests/cross_engine -t tests -v
+          python tests/cross_engine/compare.py \
+            --sqlserver build/cross-engine/raw/cross-engine-sqlserver-results/sqlserver.json \
+            --oracle build/cross-engine/raw/cross-engine-oracle-results/oracle.json \
+            --out build/cross-engine/parity-verdict.json
+      - name: Upload independent cross-engine verdict
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-engine-independent-parity-verdict
+          path: build/cross-engine/parity-verdict.json
+          retention-days: 30
+      - name: Archive permanent original fictional results
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          dest="evidence/cross-engine/ci-${{ github.run_id }}"
+          test ! -e "$dest"
+          mkdir -p "$dest"
+          cp build/cross-engine/raw/cross-engine-sqlserver-results/sqlserver.json "$dest/sqlserver.json"
+          cp build/cross-engine/raw/cross-engine-oracle-results/oracle.json "$dest/oracle.json"
+          cp build/cross-engine/parity-verdict.json "$dest/parity-verdict.json"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$dest"
+          git commit -m 'Archive matched real SQL Server and Oracle Free parity evidence ${{ github.run_id }}'
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
