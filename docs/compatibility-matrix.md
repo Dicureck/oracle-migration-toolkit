@@ -21,3 +21,12 @@
 ## Non-goals
 
 This document deliberately avoids replacing complex vendor-specific syntax through global string substitutions. Application-specific XML, user-defined functions, `MERGE`, procedural loops, optimizer hints, collation and dynamic SQL require focused analysis and live verification. Oracle 12c has release-specific differences (12.1 vs 12.2) that need target-version checks.
+
+
+## Measured parity and a confirmed difference · October 16, 2026
+
+Selected reporting patterns above have now been **executed** on real [SQL Server Developer 16.0.4305.5 and Oracle Free 26ai](verified-cross-engine-parity-2026-10-16.md) using identical fictional records. Half-open dates including leap day, two-decimal sums, deterministic Top 10 and rollback matched independent Python references and each other. Exact source rows were compared before reports. The test does not establish Oracle 12.1.0.2 support.
+
+**Confirmed incompatibility:** SQL Server's zero-length string literal is **not NULL**; Oracle evaluates the empty string as **NULL**. Character normalization must be deliberate for migrated applications. Preserve original distinction in rules and data dictionaries rather than assume numeric query parity implies general semantic parity.
+
+**Separate manual gates:** Oracle 12.1 runtime, NLS/collation and Unicode behavior, original generated-key/sequence usage, execution plan comparison and concurrency/transaction isolation remain open.

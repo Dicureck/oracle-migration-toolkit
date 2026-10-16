@@ -8,12 +8,12 @@
 | `NULL`/empty string behavior differs | SQL Server and Oracle character semantics differ | Explicit domain fixtures, nullable column review |
 | Duplicate row cardinality changes | Aggregates can hide joins multiplying or losing rows | Full exported-result multiset reconciliation |
 | Identity or sequence changes | Key generation can affect child FK references | Controlled insert/reconciliation tests |
-| No SQL Server/Oracle CI services | Current unit tests are offline | Implement opt-in integration suite once authorized |
-| Performance unsupported | No live comparable execution plan measurements | Never claim speedups until benchmark evidence exists |
+| Oracle 12.1 engine not tested | New cross-engine CI executes modern Oracle Free 26ai, **not** Oracle 12.1.0.2 | Use authorized 12.1 sandbox before target compatibility claims |
+| Performance / execution plans unsupported | Equivalent results are not evidence of identical query plans, indexes or optimizer performance | Capture actual plans on each version separately before any performance claim |
 
 ## Proposed future enhancements
 
-- Optional sandbox database integration harness, behind explicit opt-in and isolation controls.
+- **Implemented:** [isolated two-engine SQL Server/Oracle Free CI](verified-cross-engine-parity-2026-10-16.md) with full source equality, reference report reconciliation, five date windows, rollback and a confirmed empty-string semantics difference.
 - A declarative, version-specific rule catalogue with static typing checks.
 - Structured warnings for dynamic SQL and application-side query dependencies.
 - Pluggable CSV normalization policies declared in a schema contract.

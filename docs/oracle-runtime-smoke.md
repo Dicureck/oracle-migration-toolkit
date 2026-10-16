@@ -28,3 +28,10 @@ The unrelated static migration toolkit checks remain the canonical evidence for 
 The [successful Oracle Free runtime CI run](https://github.com/Dicureck/oracle-migration-toolkit/actions/runs/38815481933) created the schema, inserted synthetic fixtures, executed both report queries and validated that the PL/SQL identity-return example rolled back its new record. The [original JSON evidence is version-controlled](../evidence/oracle-free-runtime-2026-10-15.json), not solely a temporary Actions artifact.
 
 **Environment:** Oracle AI Database 26ai Free 23.26.3.0.0 (actual database banner), temporary PDB. The Oracle 12.1 target version and cross-engine equivalence remain out of scope.
+
+
+## Separate, newer milestone: two-engine parity
+
+The Oracle-only October 15 smoke test above remains independently verifiable as a historical target-engine example. A **separate October 16 two-engine CI run** subsequently executed SQL Server Developer and Oracle Free on the **same source records** and reconciled original report queries against independent Python reference results. [Cross-engine case study](verified-cross-engine-parity-2026-10-16.md) · [raw SQL Server, Oracle, and parity verdict JSON](../evidence/cross-engine/ci-38946759282/).
+
+The original Oracle-only smoke claims are not retroactively enlarged: even the newer two-engine run **does not validate Oracle 12.1.0.2**.

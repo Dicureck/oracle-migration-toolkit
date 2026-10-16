@@ -23,3 +23,12 @@ Current behavior compares literal CSV field strings. Export date/time in the sam
 ## What this proves
 
 The tool proves *exported outputs* are identical under the declared string-format policy. It does not execute either query, ensure equivalent execution plans, or confirm that two database engines themselves produced the exported files.
+
+
+## Live cross-engine complement (executed October 2026)
+
+The existing CLI remains an **offline CSV multiset comparator**. A separate [real SQL Server ↔ Oracle Free workflow](../.github/workflows/cross-engine-parity.yml) now loads the exact same fictional 260-order fixture into **both temporary database engines**, verifies each stored row, executes the original February and deterministic Top 10 SQL and further month/date-window statements, normalizes each result to explicit two-decimal strings and checks every returned row against independent Python Decimal reference results.
+
+[Successful run](https://github.com/Dicureck/oracle-migration-toolkit/actions/runs/38946759282) · [Permanent raw engine outputs and authoritative parity verdict](../evidence/cross-engine/ci-38946759282/) · [Technical case study](verified-cross-engine-parity-2026-10-16.md).
+
+This live validator does **not** silently normalize zero-length strings: SQL Server returned EMPTY while Oracle returned NULL for the same literal test. Both observations are preserved as a migration risk, not interpreted as equivalent. Oracle 12.1 was not tested.

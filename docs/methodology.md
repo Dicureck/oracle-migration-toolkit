@@ -34,7 +34,8 @@ Use fictitious identifiers and deterministic synthetic records. Include edge cas
 
 1. **Offline checks:** inventory correctness, lint-style risk detection, reference contract consistency and CSV bag reconciliation. GitHub Actions covers these.
 2. **Target engine smoke tests:** an [Oracle Free 26ai CI run](oracle-runtime-smoke.md) verified compilation/execution of original synthetic Oracle sample SQL. This is **not** an Oracle 12.1 compatibility test.
-3. **Full cross-engine integration:** comparison of actual SQL Server and Oracle output on matching source fixtures, along with plans and boundary cases, **remains pending**.
+3. **Bounded full two-engine runtime comparison: VERIFIED.** An [October 16, 2026 CI run](verified-cross-engine-parity-2026-10-16.md) executed the original SQL Server and Oracle Free SQL separately using the **same 26 invented customers and 260 orders**, verified complete source rows, five date windows, exact numeric aggregates, deterministic Top 10 ordering and rollback, and independently compared the returned values to Python Decimal reference data. **Only SQL Server Developer 2022 and Oracle Free 26ai** were executed.
+4. **Still required for the actual older target:** Oracle **12.1.0.2-specific compilation/execution**, plans, Unicode/NLS variants, identity/sequence behavior and transaction/concurrency requirements; the modern Oracle Free success cannot substitute for these.
 
 ## Phase 7 — Govern release
 
